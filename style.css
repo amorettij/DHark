@@ -1,0 +1,53 @@
+/* Reset e impostazioni base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body, html {
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f5f5;
+}
+
+/* Contenitore centrato */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* Citazione */
+blockquote {
+  font-size: 1.6rem;
+  font-style: italic;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+/* Autore */
+cite {
+  display: block;
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 2rem;
+}
+
+/* Bottone */
+button {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+button:hover {
+  background: #0056b3;
+}
