@@ -1,12 +1,17 @@
-// Percorso al file JSON
+// Percorso al file JSON (come prima)
 const QUOTES_URL = 'quotes.json';
 
 // Elementi DOM
 const quoteEl  = document.getElementById('quote');
 const authorEl = document.getElementById('author');
 const btn      = document.getElementById('new-quote');
+const bgMusic  = document.getElementById('bg-music');
+
+// Abbassa il volume al 20%
+bgMusic.volume = 0.2;
 
 let quotesData = {};
+let musicStarted = false;
 
 // Carica le citazioni da JSON
 fetch(QUOTES_URL)
@@ -25,7 +30,7 @@ fetch(QUOTES_URL)
 
 // Mostra una citazione a caso
 function showRandomQuote() {
-  const authors = Object.keys(quotesData);
+  const authors      = Object.keys(quotesData);
   const randomAuthor = authors[Math.floor(Math.random() * authors.length)];
   const quotesList   = quotesData[randomAuthor];
   const randomQuote  = quotesList[Math.floor(Math.random() * quotesList.length)];
@@ -34,5 +39,11 @@ function showRandomQuote() {
   authorEl.textContent = `— ${randomAuthor}`;
 }
 
-// Al click mostra una nuova citazione
-btn.addEventListener('click', showRandomQuote);
+// Gestore del click: nuova citazione + avvia musica se non già partita
+btn.addEventListener('click', () => {
+  showRandomQuote();
+  if (!musicStarted) {
+    bgMusic.play().catch(err => console.warn('Autoplay bloccato:', err));
+    musicStarted = true;
+  }
+});

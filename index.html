@@ -7,11 +7,43 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <blockquote id="quote">Caricamento...</blockquote>
-    <cite id="author"></cite>
-    <button id="new-quote">Nuova citazione</button>
+  <!-- Video di sfondo con poster e fallback -->
+  <div class="bg-video-container">
+    <video
+      class="bg-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      poster="assets/fire.jpg"
+    >
+      <source src="assets/fire.mp4" type="video/mp4" />
+      <!-- Fallback immagine, se il video non parte -->
+      <img src="assets/fire.jpg" alt="Sfondo fuoco" class="bg-fallback" />
+    </video>
   </div>
+
+  <!-- Audio di sottofondo nascosto -->
+  <audio id="bg-music" autoplay loop preload="auto">
+    <source src="assets/theme.mp3" type="audio/mpeg" />
+    Il tuo browser non supporta l’elemento audio.
+  </audio>
+
+  <!-- Slogan cliccabile -->
+  <a id="slogan" href="https://en.wikipedia.org/wiki/Kula_ring#Items_for_trade" target="_blank" rel="noopener">
+    Once in the DHark, in the DHark forever
+  </a>
+
+  <div class="container">
+    <blockquote id="quote" class="tagesschrift-regular">Caricamento...</blockquote>
+    <cite id="author"></cite>
+    <button id="new-quote">Ma dimmi di più</button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Once in the DHark © 2025</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
