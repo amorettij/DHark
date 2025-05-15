@@ -77,13 +77,15 @@ video:empty .bg-fallback {
   padding: 2rem;
   border-radius: 0.5rem;
   box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  max-height: 80vh;      /* limita l'altezza del box */
+  overflow-y: auto;     /* scrollbar se il contenuto è troppo lungo */
 }
 
 /* Stile del blockquote */
 blockquote {
   font-family: 'Tagesschrift', system-ui;
   font-weight: 400;
-  font-size: 2rem !important;
+  font-size: clamp(1.2rem, 2.5vw, 2rem); /* ridimensionamento dinamico */
   font-style: normal;
   color: #333;
   margin-bottom: 1rem;
