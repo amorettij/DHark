@@ -30,15 +30,11 @@ body {
   z-index: -1;
   overflow: hidden;
 }
-
-/* Video occupa tutto lo schermo */
 .bg-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
-/* Fallback immagine per il video */
 .bg-fallback {
   display: none;
   width: 100%;
@@ -69,32 +65,33 @@ video:empty .bg-fallback {
   position: relative;
   z-index: 1;
   max-width: 600px;
+  width: 90%;
   margin: auto;
   top: 50%;
   transform: translateY(-50%);
+  max-height: calc(100vh - 8rem); /* spazio per slogan e footer */
+  overflow-y: auto;             /* scrollbar se serve */
   text-align: center;
   background: rgba(255, 255, 255, 0.85);
   padding: 2rem;
   border-radius: 0.5rem;
   box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-  max-height: 80vh;      /* limita l'altezza del box */
-  overflow-y: auto;     /* scrollbar se il contenuto è troppo lungo */
 }
 
-/* Stile del blockquote */
+/* Blockquote ridimensionato */
 blockquote {
   font-family: 'Tagesschrift', system-ui;
   font-weight: 400;
-  font-size: clamp(1.2rem, 2.5vw, 2rem); /* ridimensionamento dinamico */
+  font-size: clamp(0.9rem, 2vw, 1.5rem); /* più piccolo */
   font-style: normal;
   color: #333;
   margin-bottom: 1rem;
 }
 
-/* Stile autore */
+/* Autore ridotto */
 cite {
   display: block;
-  font-size: 1.2rem;
+  font-size: 1rem; /* leggermente più piccolo */
   color: #555;
   margin-bottom: 2rem;
 }
