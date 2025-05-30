@@ -4,13 +4,13 @@ const quoteEl  = document.getElementById('quote');
 const authorEl = document.getElementById('author');
 const btn      = document.getElementById('new-quote');
 const bgMusic  = document.getElementById('bg-music');
+const container = document.querySelector('.container');
 
 bgMusic.volume = 0.2;
 
-let quotesData = {};
+let allContent = [];
 let musicStarted = false;
-
-let shownQuotes = [];
+let shownContent = [];
 
 fetch(QUOTES_URL)
   .then(response => {
@@ -18,72 +18,88 @@ fetch(QUOTES_URL)
     return response.json();
   })
   .then(data => {
-    quotesData = data;
-    showRandomQuote();
+    allContent = [];
+    
+    if (data.quotes) {
+      const quoteAuthors = Object.keys(data.quotes);
+      for (const author of quoteAuthors) {
+        const quotes = data.quotes[author];
+        for (const quote of quotes) {
+          allContent.push({
+            type: 'quote',
+            content: quote,
+            author: author
+          });
+        }
+      }
+    }
+    
+    if (data.audio) {
+      const audioAuthors = Object.keys(data.audio);
+      for (const author of audioAuthors) {
+        const audioPaths = data.audio[author];
+        for (const audioPath of audioPaths) {
+          allContent.push({
+            type: 'audio',
+            content: audioPath,
+            author: author
+          });
+        }
+      }
+    }
+    
+    showRandomContent();
   })
   .catch(err => {
     quoteEl.textContent = 'Errore nel caricamento.';
     console.error(err);
   });
 
-function showRandomQuote() {
-  if (shownQuotes.length === 0) {
-    const allQuotesCount = getAllQuotesCount();
-    const allQuotesShown = (shownQuotes.length > 0 && shownQuotes.length >= allQuotesCount);
-    
-    if (allQuotesShown) {
-      shownQuotes = [];
-    }
+function showRandomContent() {
+  if (shownContent.length >= allContent.length) {
+    shownContent = [];
   }
-
-  const authors = Object.keys(quotesData);
-  let randomAuthor, quotesList, randomQuote, quoteId;
-  let found = false;
-
-  while (!found) {
-    randomAuthor = authors[Math.floor(Math.random() * authors.length)];
-    quotesList = quotesData[randomAuthor];
+  const availableContent = allContent.filter(item => !shownContent.includes(item.content));
+  
+  const randomIndex = Math.floor(Math.random() * availableContent.length);
+  const selectedContent = availableContent[randomIndex];
+  
+  shownContent.push(selectedContent.content);
+  
+  if (selectedContent.type === 'audio') {
+    const audioPlayerHTML = `
+      <div class="audio-content">
+        <audio controls autoplay>
+          <source src="${selectedContent.content}" type="audio/mpeg">
+          Il tuo browser non supporta l'elemento audio.
+        </audio>
+      </div>
+    `;
+    quoteEl.innerHTML = audioPlayerHTML;
+    authorEl.textContent = `— ${selectedContent.author}`;
     
-    const availableQuotes = [];
-    for (let i = 0; i < quotesList.length; i++) {
-      quoteId = `${randomAuthor}:${i}`;
-      if (!shownQuotes.includes(quoteId)) {
-        availableQuotes.push({ index: i, quote: quotesList[i] });
+    bgMusic.pause();
+    
+    setTimeout(() => {
+      const audioElement = document.querySelector('.audio-content audio');
+      if (audioElement) {
+        audioElement.addEventListener('ended', () => {
+          bgMusic.play().catch(err => console.warn('Autoplay bloccato:', err));
+        });
       }
-    }
+    }, 100);
+  } else {
+    quoteEl.textContent = `"${selectedContent.content}"`;
+    authorEl.textContent = `— ${selectedContent.author}`;
     
-    if (availableQuotes.length > 0) {
-      const randomIndex = Math.floor(Math.random() * availableQuotes.length);
-      const selectedQuote = availableQuotes[randomIndex];
-      randomQuote = selectedQuote.quote;
-      quoteId = `${randomAuthor}:${selectedQuote.index}`;
-      found = true;
-    }
-    
-    if (!found && getAllQuotesCount() <= shownQuotes.length) {
-      shownQuotes = [];
-      found = true;
-      return showRandomQuote();
+    if (musicStarted && bgMusic.paused) {
+      bgMusic.play().catch(err => console.warn('Autoplay bloccato:', err));
     }
   }
-
-  shownQuotes.push(quoteId);
-
-  quoteEl.textContent = `"${randomQuote}"`;
-  authorEl.textContent = `— ${randomAuthor}`;
-}
-
-function getAllQuotesCount() {
-  let count = 0;
-  const authors = Object.keys(quotesData);
-  for (const author of authors) {
-    count += quotesData[author].length;
-  }
-  return count;
 }
 
 btn.addEventListener('click', () => {
-  showRandomQuote();
+  showRandomContent();
   if (!musicStarted) {
     bgMusic.play().catch(err => console.warn('Autoplay bloccato:', err));
     musicStarted = true;
