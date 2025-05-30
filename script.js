@@ -86,6 +86,10 @@ function showRandomContent() {
         audioElement.addEventListener('ended', () => {
           bgMusic.play().catch(err => console.warn('Autoplay bloccato:', err));
         });
+        
+        audioElement.addEventListener('play', () => {
+          bgMusic.pause();
+        });
       }
     }, 100);
   } else {
