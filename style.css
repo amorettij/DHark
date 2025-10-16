@@ -147,3 +147,26 @@ audio::-webkit-media-controls-play-button:hover {
   font-size: 0.9rem;
   z-index: 1;
 }
+
+/* per immagini nelle quotes */
+
+#quote {
+  padding: 0;
+}
+
+#quote .pic-content {
+  margin: 0;
+}
+
+#quote .pic-content img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: calc(100vh - 260px);
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.container {
+  overflow: visible;
+}

@@ -20,6 +20,7 @@ fetch(QUOTES_URL)
   .then(data => {
     allContent = [];
     
+    // --- QUOTES ---
     if (data.quotes) {
       const quoteAuthors = Object.keys(data.quotes);
       for (const author of quoteAuthors) {
@@ -33,7 +34,8 @@ fetch(QUOTES_URL)
         }
       }
     }
-    
+
+    // --- AUDIO ---
     if (data.audio) {
       const audioAuthors = Object.keys(data.audio);
       for (const author of audioAuthors) {
@@ -47,7 +49,22 @@ fetch(QUOTES_URL)
         }
       }
     }
-    
+
+    // --- PICS  ---
+    if (data.pics) {
+      const picAuthors = Object.keys(data.pics);
+      for (const author of picAuthors) {
+        const picPaths = data.pics[author];
+        for (const picPath of picPaths) {
+          allContent.push({
+            type: 'pic',
+            content: picPath,
+            author: author
+          });
+        }
+      }
+    }
+
     showRandomContent();
   })
   .catch(err => {
@@ -59,13 +76,12 @@ function showRandomContent() {
   if (shownContent.length >= allContent.length) {
     shownContent = [];
   }
+
   const availableContent = allContent.filter(item => !shownContent.includes(item.content));
-  
   const randomIndex = Math.floor(Math.random() * availableContent.length);
   const selectedContent = availableContent[randomIndex];
-  
   shownContent.push(selectedContent.content);
-  
+
   if (selectedContent.type === 'audio') {
     const audioPlayerHTML = `
       <div class="audio-content">
@@ -77,25 +93,38 @@ function showRandomContent() {
     `;
     quoteEl.innerHTML = audioPlayerHTML;
     authorEl.textContent = `— ${selectedContent.author}`;
-    
     bgMusic.pause();
-    
+
     setTimeout(() => {
       const audioElement = document.querySelector('.audio-content audio');
       if (audioElement) {
         audioElement.addEventListener('ended', () => {
           bgMusic.play().catch(err => console.warn('Autoplay bloccato:', err));
         });
-        
         audioElement.addEventListener('play', () => {
           bgMusic.pause();
         });
       }
     }, 100);
+
+  } else if (selectedContent.type === 'pic') {
+    const imgHTML = `
+      <figure class="pic-content">
+        <img src="${selectedContent.content}" alt="${selectedContent.author}" loading="lazy">
+      </figure>
+    `;
+    quoteEl.innerHTML = imgHTML;
+    authorEl.textContent = `— ${selectedContent.author}`;
+
+    // music stays with imgs
+    if (musicStarted && bgMusic.paused) {
+      bgMusic.play().catch(err => console.warn('Autoplay bloccato:', err));
+    }
+
   } else {
+    // quote
     quoteEl.textContent = `"${selectedContent.content}"`;
     authorEl.textContent = `— ${selectedContent.author}`;
-    
     if (musicStarted && bgMusic.paused) {
       bgMusic.play().catch(err => console.warn('Autoplay bloccato:', err));
     }
